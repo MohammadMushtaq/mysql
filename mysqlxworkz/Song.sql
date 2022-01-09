@@ -99,33 +99,65 @@ select*from song_details where s_lang ='hindi' or s_lang='telugu' or s_lang='eng
 select*from song_details where s_price>150 and s_price<=250;
 select*from song_details where s_price between 150 and 250;
 
-
-
 select*from song_details where s_lang in('hindi','telugu','english');
 select count(*) from song_details;
 select*from song_details;
 
+select count(s_name)  as noofsongs, year(s_release_date) 
+from song_details where year(s_release_date) =2021;
+select count(s_name)  as noofsongs, year(s_release_date) 
+from song_details group by (s_release_date) ;
 
-select count(s_name)  as noofsongs,s_lang, year(s_release_date) 
-from song_details where  year(s_release_date) =2021;
 select s_id as song_id, s_singer as singer_name, s_name as song_name from song_details;
-select count(s_singer) as s_name from song_details group by s_singer;
+
+select count(s_singer) as singedsong,s_singer from song_details group by s_singer;
+
 select count(s_name)  as noofsongs,s_lang from song_details group by s_lang;
-select count(s_name)  as noofsongs,s_lang,s_singer,s_name
+select count(s_name)  as noofsongs,s_lang,s_singer
  from song_details group by s_name;
  update song_details set s_release_date = '2021-05-01 00:05:01' where s_id=5;
- select count(s_name)  as noofsongs from song_details group by s_name having noofsongs>1;
+ select count(s_name)  as noofsongs,s_singer from song_details group by s_name having noofsongs>5;
  
 select count(s_name)  as noofsongs,s_gener from song_details group by s_singer ;
+select count(s_name) as noofsongs,s_singer,s_lang from song_details 
+where s_lang in('hindi','kannada','english') group by s_lang having noofsongs>2;
 
-update song_details set s_gener = 'romantic' where s_id=7;
-update song_details set s_singer = 'arijit' where s_id=15;
+select max(s_likes) as maxlikes, s_gener  from song_details group by s_gener;
+
+select max(s_likes) as maxlikes from song_details;
+select min(s_likes) as maxlikes from song_details;
+
+select sum(s_price) as totalprice,s_platform from song_details group by s_platform;
+
+select avg (s_likes) as avglikes, s_singer from song_details 
+where s_name in('give me some sunshine','tere mere galla','beetelamhe') group by s_singer;
+
+select*from song_details where s_likes= (select max(s_likes) from song_details);-- max highest likes
+
+select*from song_details where s_likes =(select max(s_likes)
+from song_details where s_likes < (select max(s_likes) from song_details)); -- secound hihest like
+
+select*from song_details where s_likes =
+(select max(s_likes) from song_details where s_likes < (select max(s_likes)-- third highest
+ from song_details where s_likes <(select max(s_likes) from song_details)));
+ 
+ 
+
+select*from song_details where s_likes= (select max(s_likes)
+from song_details) or s_likes = (select max(s_likes) from song_details
+ where s_likes < (select max(s_likes) from song_details));
 
 select*from song_details;
 
+ 
+update song_details set s_gener = 'romantic' where s_id=7;
+update song_details set s_singer = 'arijit' where s_id=15;
+update song_details set s_likes = 210000 where s_id =20;
 
+select max(s_likes)as maxlikes,s_platform from song_details group by s_platform;
 
+select * from song_details where s_likes in (select max(s_likes)	from song_details group by s_platform);	
 
-
-
-
+select max(s_price) ,s_singer from song_details group by s_singer having max(s_price)>450;
+select * from song_details where s_price in(select max(s_price)from song_details
+group by s_singer having max(s_price)>250);
