@@ -156,8 +156,37 @@ update song_details set s_likes = 210000 where s_id =20;
 
 select max(s_likes)as maxlikes,s_platform from song_details group by s_platform;
 
-select * from song_details where s_likes in (select max(s_likes)	from song_details group by s_platform);	
+select * from song_details where s_likes in (select max(s_likes) from song_details group by s_platform);	
 
 select max(s_price) ,s_singer from song_details group by s_singer having max(s_price)>450;
 select * from song_details where s_price in(select max(s_price)from song_details
 group by s_singer having max(s_price)>250);
+
+update song_details set s_name="phele nazar", s_platform ='jio music' where s_id=12;
+
+commit;  -- save data permanently sfter commit no rollback
+
+update song_details set s_likes =15000 where s_id=12;
+
+
+savepoint S; -- before rollback set the certain point rollback works 
+rollback;
+
+update songdetails set s_platform='apple music' where s_id=12;
+savepoint b;
+
+rollback; -- undo the update  at b used only for dml commands ,update,delete,insert;
+
+select user();
+select user,host from mysql.user;
+create user 'tempuser'@'localhost' identified by 'tempuser@123';
+grant select,create on song.song_details to 'tempuser'@'localhost';
+
+show grants for 'tempuser'@'localhost';
+
+revoke create on song.song_details from 'tempuser'@'localhost';
+
+
+
+
+
